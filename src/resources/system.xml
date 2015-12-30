@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="system" extends="json-default" namespace="/system">
+		<interceptors>
+			<interceptor name="exception"
+				class="com.nsc.dem.util.interceptor.ExceptionInterceptor" />
+			<interceptor-stack name="stacks">
+				<interceptor-ref name="exception"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="stacks"></default-interceptor-ref>
+		<global-results>
+			<result name="error">/S500.jsp</result>
+		</global-results>
+		<action name="*AppUser" class="com.nsc.dem.action.system.AppUserAction"
+			method="{1}">
+			<result name="display">/main/mainFrame.jsp</result>
+			<result name="logout">/login.jsp</result>
+			<result name="romotedisplay">/main/romoteSiteFrame.jsp</result>
+		</action>
+		<action name="*SystemMenu" class="com.nsc.dem.action.system.SystemMenuAction"
+			method="{1}">
+			<result name="left">/main/leftFrame.jsp</result>
+		</action>
+
+		<action name="*Shortcut" class="com.nsc.dem.action.system.ShortcutMenuAction"
+			method="{1}">
+			<result name="top">/main/topFrame.jsp</result>
+			<result name="list" type="json">
+
+				<param name="root">list</param>
+			</result>
+		</action>
+
+		<action name="*LogOperate" class="com.nsc.dem.action.system.LogOperateAction"
+			method="{1}">
+			<result type="json" name="tab">
+				<param name="root">tablebean</param>
+			</result>
+			<result name="list" type="json">
+				<param name="root">list</param>
+			</result>
+		</action>
+
+		<action name="*Backup" class="com.nsc.dem.action.system.LogOperateAction"
+			method="{1}">
+			<result name="tab" type="json">
+				<param name="root">tablebean</param>
+			</result>
+			<result name="list" type="json">
+				<param name="root">list</param>
+			</result>
+			<result name="backup" type="json">
+				<param name="root">returnValue</param>
+			</result>
+			<result name="status" type="json">
+				<param name="root">obj</param>
+			</result>
+		</action>
+
+		<action name="*LogDelete" class="com.nsc.dem.action.system.LogOperateAction"
+			method="{1}">
+			<result name="tab" type="json">
+				<param name="root">tablebean</param>
+			</result>
+			<result name="list" type="json">
+				<param name="root">list</param>
+			</result>
+			<result name="delete" type="json">
+				<param name="root">returnValue</param>
+			</result>
+			<result name="status" type="json">
+				<param name="root">obj</param>
+			</result>
+		</action>
+
+
+		<action name="*ProfileManager" class="com.nsc.dem.action.system.ProfileManager"
+			method="{1}">
+			<result name="display">/system/profileManager.jsp</result>
+			<result name="list" type="json">
+				<param name="root">list</param>
+			</result>
+		</action>
+
+		<action name="getDictionaryData" class="com.nsc.dem.action.system.DictionaryAction"
+			method="getDictionaryDataAction">
+			<result type="json">
+				<param name="root">tablebean</param>
+			</result>
+		</action>
+		<action name="getRoleProioityAction" class="com.nsc.dem.action.system.DictionaryAction"
+			method="getRoleProioityAction">
+			<result type="json">
+				<param name="root">rolePriority</param>
+			</result>
+		</action>
+
+		<action name="getSelectDictionary" class="com.nsc.dem.action.system.DictionaryAction"
+			method="getSelectDictionaryAction">
+			<result type="json">
+				<param name="root">selectList</param>
+			</result>
+		</action>
+
+		<action name="getUpdateDictionary" class="com.nsc.dem.action.system.DictionaryAction"
+			method="getUpdateDictionaryAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="getDeleteDictionary" class="com.nsc.dem.action.system.DictionaryAction"
+			method="getDeleteDictionaryAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="selectDictionaryCode" class="com.nsc.dem.action.system.DictionaryAction"
+			method="selectDictionaryCodeAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="getDictionaryByCode" class="com.nsc.dem.action.system.DictionaryAction"
+			method="getDictionaryByCodeAction">
+			<result type="json">
+				<param name="root">updateList</param>
+			</result>
+		</action>
+		<action name="unitNameAction" class="com.nsc.dem.action.system.UnitInfoManagerAction"
+			method="unitNameAction">
+			<result type="json">
+				<param name="root">list</param>
+			</result>
+		</action>
+		<action name="desginName" class="com.nsc.dem.action.system.UnitInfoManagerAction"
+			method="desginNameAction">
+			<result type="json">
+				<param name="root">
+					list</param>
+			</result>
+		</action>
+
+		<action name="unitType" class="com.nsc.dem.action.system.UnitInfoManagerAction"
+			method="unitTypeAction">
+			<result type="json">
+				<param name="root">
+					unitTypeList</param>
+			</result>
+		</action>
+		<action name="unitNameAll" class="com.nsc.dem.action.system.UnitInfoManagerAction"
+			method="unitNameAllAction">
+			<result type="json">
+				<param name="root">allList</param>
+			</result>
+		</action>
+		<action name="selectUnitInfo" class="com.nsc.dem.action.system.UnitInfoManagerAction"
+			method="selectUnitInfoAction">
+			<result type="json">
+				<param name="root">tablebean</param>
+			</result>
+		</action>
+		<action name="deleteUnit" class="com.nsc.dem.action.system.UnitInfoManagerAction"
+			method="deleteUnitAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+
+		</action>
+		<action name="insertUnit" class="com.nsc.dem.action.system.UnitInfoManagerAction"
+			method="insertUnitAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="updateSelectUnit" class="com.nsc.dem.action.system.UnitInfoManagerAction"
+			method="updateSelectUnitAction">
+			<result type="json">
+				<param name="root">updateList</param>
+			</result>
+		</action>
+
+		<action name="roleList" class="com.nsc.dem.action.system.UserInfoManagerAction"
+			method="roleListAction">
+			<result type="json">
+				<param name="root">list</param>
+			</result>
+		</action>
+		<action name="selectUserInfoManager" class="com.nsc.dem.action.system.UserInfoManagerAction"
+			method="selectUserInfoManagerAction">
+			<result type="json">
+				<param name="root">tablebean</param>
+			</result>
+		</action>
+		<action name="updatePasswordUserInfoManagerAction" class="com.nsc.dem.action.system.UserInfoManagerAction"
+			method="updatePasswordUserInfoManagerAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="checkPasswordUserInfoManagerAction" class="com.nsc.dem.action.system.UserInfoManagerAction"
+			method="checkPassword">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="deleteUserinfo" class="com.nsc.dem.action.system.UserInfoManagerAction"
+			method="deleteUserinfoAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+
+		<action name="selectLoginIdByPassword" class="com.nsc.dem.action.system.UserInfoManagerAction"
+			method="selectLoginIdByPassword">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="insertUserinfo" class="com.nsc.dem.action.system.UserInfoManagerAction"
+			method="insertUserinfoAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="updateSelectUser" class="com.nsc.dem.action.system.UserInfoManagerAction"
+			method="updateSelectUserAction">
+			<result type="json">
+				<param name="root">updateList</param>
+			</result>
+		</action>
+
+		<action name="selectUserBoolean" class="com.nsc.dem.action.system.UserInfoManagerAction"
+			method="selectUserBooleanAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+
+		<action name="selectRoleInfo" class="com.nsc.dem.action.system.RoleInfoManagerAction"
+			method="selectRoleInfoAction">
+			<result type="json">
+				<param name="root">tablebean</param>
+			</result>
+		</action>
+		<action name="deleteRoleInfo" class="com.nsc.dem.action.system.RoleInfoManagerAction"
+			method="deleteRoleInfoAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="insertRoleInfo" class="com.nsc.dem.action.system.RoleInfoManagerAction"
+			method="insertRoleInfoAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="selectRoleBoolean" class="com.nsc.dem.action.system.RoleInfoManagerAction"
+			method="selectRoleBooleanAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="updateSelectRole" class="com.nsc.dem.action.system.RoleInfoManagerAction"
+			method="updateSelectRoleAction">
+			<result type="json">
+				<param name="root">updateList</param>
+			</result>
+		</action>
+		<action name="getUserByRoleId" class="com.nsc.dem.action.system.RoleInfoManagerAction"
+			method="getUserByRoleIdAction">
+			<result type="json">
+				<param name="root">list</param>
+			</result>
+		</action>
+
+		<action name="authClass" class="com.nsc.dem.action.system.AuthInfoManagerAction"
+			method="authClassAction">
+			<result type="json">
+				<param name="root">authClassList</param>
+			</result>
+		</action>
+
+
+		<action name="selectProfileAll" class="com.nsc.dem.action.system.AuthInfoManagerAction"
+			method="selectProfileAllAction">
+			<result type="json">
+				<param name="root">tablebean</param>
+			</result>
+		</action>
+		<action name="deleteProfile" class="com.nsc.dem.action.system.AuthInfoManagerAction"
+			method="deleteProfileAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+
+		<action name="getTProfileByType" class="com.nsc.dem.action.system.AuthInfoManagerAction"
+			method="getTProfileByTypeAction">
+			<result type="json">
+				<param name="root">typeProfileList</param>
+			</result>
+		</action>
+		<action name="insertProfile" class="com.nsc.dem.action.system.AuthInfoManagerAction"
+			method="insertProfileAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="getProfileById" class="com.nsc.dem.action.system.AuthInfoManagerAction"
+			method="getProfileByIdAction">
+			<result type="json">
+				<param name="root">updateProfileList</param>
+			</result>
+		</action>
+		<action name="selectProfileId" class="com.nsc.dem.action.system.AuthInfoManagerAction"
+			method="selectProfileIdAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="selectRoleProfile" class="com.nsc.dem.action.system.AuthInfoManagerAction"
+			method="selectRoleProfileAction">
+			<result type="json">
+				<param name="root">tablebean</param>
+			</result>
+		</action>
+
+		<action name="deleteRoleProfile" class="com.nsc.dem.action.system.AuthInfoManagerAction"
+			method="deleteRoleProfileAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="profileInfo" class="com.nsc.dem.action.system.AuthInfoManagerAction"
+			method="profileInfoAction">
+			<result type="json">
+				<param name="root">rolePriority</param>
+			</result>
+		</action>
+		<action name="insertRoleProfile" class="com.nsc.dem.action.system.AuthInfoManagerAction"
+			method="insertRoleProfileAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="getTprofileByTypeandRoleId" class="com.nsc.dem.action.system.AuthInfoManagerAction"
+			method="getTprofileByTypeandRoleIdAction">
+			<result type="json">
+				<param name="root">profileTypeList</param>
+			</result>
+		</action>
+		<action name="selectUserProfileInfo" class="com.nsc.dem.action.system.AuthInfoManagerAction"
+			method="selectUserProfileInfoAction">
+			<result type="json">
+				<param name="root">tablebean</param>
+			</result>
+		</action>
+		<action name="deleteUserProfile" class="com.nsc.dem.action.system.AuthInfoManagerAction"
+			method="deleteUserProfileAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="selectAllUser" class="com.nsc.dem.action.system.AuthInfoManagerAction"
+			method="selectAllUserAction">
+			<result type="json">
+				<param name="root">allUserList</param>
+			</result>
+		</action>
+		<action name="getTProfileByUserId" class="com.nsc.dem.action.system.AuthInfoManagerAction"
+			method="getTProfileByUserIdAction">
+			<result type="json">
+				<param name="root">allprofileList</param>
+			</result>
+		</action>
+		<action name="insertUserProfile" class="com.nsc.dem.action.system.AuthInfoManagerAction"
+			method="insertUserProfileAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="userProfileInfo" class="com.nsc.dem.action.system.AuthInfoManagerAction"
+			method="userProfileInfoAction">
+			<result type="json">
+				<param name="root">rolePriority</param>
+			</result>
+		</action>
+		<action name="getTProfileByparentId" class="com.nsc.dem.action.system.AuthInfoManagerAction"
+			method="getTProfileByparentIdAction">
+			<result type="json">
+				<param name="root">parentIdList</param>
+			</result>
+		</action>
+		<action name="remoteSite" class="com.nsc.dem.action.system.RemoteSiteAction"
+			method="remoteSiteAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+
+		<action name="dictionaryType" class="com.nsc.dem.action.system.DictionaryTypeAction"
+			method="dictionaryTypeAction">
+			<result type="json">
+				<param name="root">list</param>
+			</result>
+		</action>
+		<action name="getUserByUnitCode" class="com.nsc.dem.action.system.UnitInfoManagerAction"
+			method="getUserByUnitCodeAction">
+			<result type="json">
+				<param name="root">userList</param>
+			</result>
+		</action>
+
+		<action name="getProjectByDesCode" class="com.nsc.dem.action.system.UnitInfoManagerAction"
+			method="getProjectByDesCodeAction">
+			<result type="json">
+				<param name="root">tProjectList</param>
+			</result>
+		</action>
+		<action name="getProjectByOwenCode" class="com.nsc.dem.action.system.UnitInfoManagerAction"
+			method="getProjectByOwenCodeAction">
+			<result type="json">
+				<param name="root">owenList</param>
+			</result>
+		</action>
+		<action name="selectYiShouQuanInfo" class="com.nsc.dem.action.system.TmpAuthorManagerAction"
+			method="selectYiShouQuanInfo">
+			<result type="json">
+				<param name="root">tablebean</param>
+			</result>
+		</action>
+		<action name="dataProfileInfoAction" class="com.nsc.dem.action.system.TmpAuthorManagerAction"
+			method="dataProfileInfoAction">
+			<result type="json">
+				<param name="root">tablebean</param>
+			</result>
+		</action>
+
+		<action name="getTprofileTempByTypeandRoleId" class="com.nsc.dem.action.system.TmpAuthorManagerAction"
+			method="getTprofileTempByTypeandRoleIdAction">
+			<result type="json">
+				<param name="root">profileTempTypeList</param>
+			</result>
+		</action>
+		<action name="profileTempInfo" class="com.nsc.dem.action.system.TmpAuthorManagerAction"
+			method="profileTempInfoAction">
+			<result type="json">
+				<param name="root">rolePriority</param>
+			</result>
+		</action>
+		<action name="insertYiShouQuanInfo" class="com.nsc.dem.action.system.TmpAuthorManagerAction"
+			method="insertYiShouQuanInfoAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="userList" class="com.nsc.dem.action.system.TmpAuthorManagerAction"
+			method="userListAction">
+			<result type="json">
+				<param name="root">userList</param>
+			</result>
+		</action>
+		<action name="deleteProfileTemp" class="com.nsc.dem.action.system.TmpAuthorManagerAction"
+			method="deleteProfileTempAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="updateYiShouQuan" class="com.nsc.dem.action.system.TmpAuthorManagerAction"
+			method="updateYiShouQuanAction">
+			<result type="json">
+				<param name="root">updateList</param>
+			</result>
+		</action>
+		<action name="selectProfileTempIdBoolean" class="com.nsc.dem.action.system.TmpAuthorManagerAction"
+			method="selectProfileTempIdBooleanAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="updateDataProfileInfo" class="com.nsc.dem.action.system.TmpAuthorManagerAction"
+			method="updateDataProfileInfoAction">
+			<result type="json">
+				<param name="root">updateDataList</param>
+			</result>
+		</action>
+		<action name="saveServiceSetInfo" class="com.nsc.dem.action.system.ServersSetAction"
+			method="save">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+			<action name="appliationServer" class="com.nsc.dem.action.system.ServersSetAction"
+			method="returnUI">
+			<result>/system/AppliationServer.jsp</result>
+		</action>
+		<action name="getAllProvinceInfo" class="com.nsc.dem.action.system.ServersSetAction"
+			method="getAllProvinceInfo">
+			<result>/system/AppliationServer.jsp</result>
+		</action>
+		<action name="getAreaInfoTask" class="com.nsc.dem.action.system.TaskListAction"
+			method="getProvinceInfo">
+			<result type = "json" >
+				<param name="root">aLists</param>
+			</result>
+		</action>
+		<action name="getProvinceInfoTask" class="com.nsc.dem.action.system.TaskListAction"
+			method="getProvinceInfo">
+			<result type = "json" >
+				<param name="root">pLists</param>
+			</result>
+		</action>
+		<action name="executeTaskTask" class="com.nsc.dem.action.system.TaskListAction"
+			method="executeTaskList">
+			<result type = "json" >
+				<param name="root">returns</param>
+			</result>
+		</action>
+		<action name="getStations" class="com.nsc.dem.action.system.AppUserAction"
+			method="getStation">
+			<result type = "json" >
+				<param name="root">stations</param>
+			</result>
+		</action>
+		<action name="getProvinces" class="com.nsc.dem.action.system.SystemMenuAction"
+			method="getProvincesByAreaId">
+			<result type = "json" >
+				<param name="root">provinces</param>
+			</result>
+		</action>
+	</package>
+</struts>    

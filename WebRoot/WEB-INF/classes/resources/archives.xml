@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="archives" extends="json-default" namespace="/archives">
+		<interceptors>
+			<interceptor name="exception"
+				class="com.nsc.dem.util.interceptor.ExceptionInterceptor" />
+			<interceptor-stack name="stacks">
+				<interceptor-ref name="exception"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="stacks"></default-interceptor-ref>
+		<global-results>
+			<result name="error">/S500.jsp</result>
+		</global-results>
+		<action name="*UpLoad" class="com.nsc.dem.action.archives.FileUpLoadAction"
+			method="{1}">
+			<result name="initTree">/archives/fileUpLoad.jsp</result>
+			<result name="display">/archives/fileUpLoadResult.jsp</result>
+			<result type="json">
+				<param name="root">list</param>
+			</result>
+		</action>
+		<action name="*FileUpdate" class="com.nsc.dem.action.archives.FileUpdateAction"
+			method="{1}">
+			<result name="search">/search/basicSearchResult.jsp</result>
+			<result name="initUpdate">/archives/fileUpLoadUpdate.jsp?menuId=11</result>
+			<result type="json" name="list">
+				<param name="root">list</param>
+			</result>
+			<result type="json" name="tab">
+				<param name="root">tablebean</param>
+			</result>
+		</action>
+        <action name="*Thumbnails" class="com.nsc.dem.action.archives.ThumbnailsAction"
+			method="{1}">
+			<result name="success">indexingArchive.jsp</result>
+		</action>
+		<action name="getFileGrouping" class="com.nsc.dem.action.archives.DocTypeAction"
+			method="getFileGroupAction">
+			<result type="json">
+				<param name="root">tablebean</param>
+			</result>
+		</action>
+
+		<action name="getRoleProiorityAction" class="com.nsc.dem.action.archives.DocTypeAction"
+			method="getRoleProiorityAction">
+			<result type="json">
+				<param name="root">rolePriority</param>
+			</result>
+		</action>
+		<action name="indexingArchive" class="com.nsc.dem.action.archives.IndexingAction"
+			method="indexingArchive">
+			<result name="success">indexingArchive.jsp</result>
+		</action>
+		<action name="getInsertFileGrouping" class="com.nsc.dem.action.archives.DocTypeAction"
+			method="getInsertFileGroupingAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+
+		<action name="getDeleteFileGrouping" class="com.nsc.dem.action.archives.DocTypeAction"
+			method="getFileGroupingDelete">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+
+		<action name="selectDocTypeCode" class="com.nsc.dem.action.archives.DocTypeAction"
+			method="selectDocTypeCodeAction">
+			<result type="json">
+				<param name="root">
+					returnValue</param>
+			</result>
+		</action>
+			<action name="getDocTypeByCode" class="com.nsc.dem.action.archives.DocTypeAction"
+			method="getDocTypeByCodeAction">
+			<result type="json">
+				<param name="root">updateList</param>
+			</result>
+		</action>
+		<action name="selectDocList" class="com.nsc.dem.action.archives.docDisposalAction"
+			method="selectDocListAction">
+			<result type="json">
+				<param name="root">tablebean</param>
+			</result>
+		</action>
+		<action name="updateDocStatus" class="com.nsc.dem.action.archives.docDisposalAction"
+			method="updateDocStatusAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="getProjectDetailsAction" class="com.nsc.dem.action.archives.docDetailsInfoAction"
+			method="getProjectDetailsAction">
+			<result type="json">
+				<param name="root">docInfo</param>
+			</result>
+		</action>
+
+		<action name="deleteDocInfo" class="com.nsc.dem.action.archives.docDisposalAction"
+			method="deleteDocInfoAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="initTreeAction" class="com.nsc.dem.action.archives.docDisposalAction"
+			method="initTreeAction">
+			<result name="initTree">/archives/docDisposal.jsp</result>
+		</action>
+
+		<action name="selectDocDestoryed" class="com.nsc.dem.action.archives.docDestroyedAction"
+			method="selectDocDestoryedAction">
+			<result type="json">
+				<param name="root">tablebean</param>
+			</result>
+		</action>
+		<action name="updateDocDestroy" class="com.nsc.dem.action.archives.docDestroyedAction"
+			method="updateDocDestroyAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="comBackDocDestory" class="com.nsc.dem.action.archives.docDestroyedAction"
+			method="comeBackDocDestoryAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="clearDocDestory" class="com.nsc.dem.action.archives.docDestroyedAction"
+			method="clearDocDestoryAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="moveDoc" class="com.nsc.dem.action.archives.docDisposalAction"
+			method="moveDocAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		
+		
+		<action name="importArchives" class="com.nsc.dem.action.archives.IndexingAction"
+			method="importArchivesAction">
+			<result type="json">
+				<param name="root">message</param>
+			</result>
+		</action>
+		<action name="docTypeList" class="com.nsc.dem.action.archives.docDisposalAction"
+			method="docTypeListAction">
+			<result type="json">
+				<param name="root">list</param>
+			</result>
+		</action>
+
+	</package>
+</struts>    

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="search" extends="json-default" namespace="/search">
+		<interceptors>
+			<interceptor name="exception"
+				class="com.nsc.dem.util.interceptor.ExceptionInterceptor" />
+			<interceptor-stack name="stacks">
+				<interceptor-ref name="exception"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="stacks"></default-interceptor-ref>
+		<global-results>
+			<result name="error">/S500.jsp</result>
+		</global-results>
+		<action name="getNode" class="com.nsc.dem.action.searches.DecmGradeAction"
+			method="getNode">
+			<result type="json">
+				<param name="root">list</param>
+			</result>
+		</action>
+		<action name="*Basic" class="com.nsc.dem.action.searches.DecmBasicAction"
+			method="{1}">
+			<result type="json">
+				<param name="root">list</param>
+			</result>
+		</action>
+		<!-- 高级检索 -->
+		<action name="*AdvancedSearch" class="com.nsc.dem.action.searches.AdvancedSearchAction"
+			method="{1}">
+			<result name="result">/search/basicSearchResult.jsp</result>
+			<result type="json" name="list">
+				<param name="root">list</param>
+			</result>
+			<result type="json" name="tab">
+				<param name="root">tablebean</param>
+			</result>
+		</action>
+		<action name="getNodeListInFormation" class="com.nsc.dem.action.searches.NodeListInfoAction"
+			method="getNodeListInFormation">
+			<result type="json">
+				<param name="root">tablebean</param>
+			</result>
+		</action>
+		<action name="selectIdGetName" class="com.nsc.dem.action.searches.NodeListInfoAction"
+			method="selectIdGetNameAction">
+			<result type="json">
+				<param name="root">treeName</param>
+			</result>
+		</action>
+
+		<action name="getPreView" class="com.nsc.dem.action.searches.PreViewAction"
+			method="getPreView">
+		</action>
+		<action name="getOnLineSee" class="com.nsc.dem.action.searches.OnLineSeeAction"
+			method="getDownloadFile">
+		</action> 
+		<action name="getPackAgeDownLoad"
+			class="com.nsc.dem.action.searches.PackAgeDownLoadAction" method="getPageAgeDownLoad">
+		</action>
+		<action name="searchIndexedArchive" class="com.nsc.dem.action.searches.IndexSearchAction"
+			method="doSESearch">
+			<result name="success">wholeResult.jsp</result>
+			<result name="failse">wholeSearch.jsp</result>
+		</action>
+		
+		<action name="getDownLoadAddress"
+			class="com.nsc.dem.action.searches.PackAgeDownLoadAction" method="getDownLoadAddress">
+			<result type="json">
+			</result>
+		</action>
+		<action name="downloadFile"
+			class="com.nsc.dem.action.searches.PackAgeDownLoadAction" method="downloadFile">
+			<!--  
+			<result type="json">
+			</result>
+			-->
+		</action>
+		
+		<action name="getDownloadFileStream"
+			class="com.nsc.dem.action.searches.DownloadFileOutSide" method="getDownloadFileStream">
+		</action>
+			
+		<action name="testArchive" class="com.nsc.dem.action.searches.IndexSearchAction"
+			method="doTest">
+			<result type="json">
+				<param name="root">list</param>
+			</result>
+		</action>
+		<action name="suggestArchive" class="com.nsc.dem.action.searches.IndexSearchAction"
+			method="suggest">
+			<result type="json">
+				<param name="root">list</param>
+			</result>
+		</action>
+		<action name="*BasicSearch" class="com.nsc.dem.action.searches.BasicSearchAction"
+			method="{1}">
+			<result name="search">/search/basicSearchResult.jsp</result>
+			<result type="json">
+				<param name="root">tablebean</param>
+			</result>
+		</action>
+
+		<action name="*ClassConfig" class="com.nsc.dem.action.searches.ClassConfigAction"
+			method="{1}">
+			<result name="edit">/search/classEdit.jsp</result>
+			<result name="del">/search/classConfigTab.jsp</result>
+			<result type="json" name="tab">
+				<param name="root">tablebean</param>
+			</result>
+			<result type="json" name="list">
+				<param name="root">list</param>
+			</result>
+		</action>
+		<action name="*ClassLevelConfig"
+			class="com.nsc.dem.action.searches.ClassLevelConfigAction" method="{1}">
+			<result name="del">/search/classConfigTab.jsp</result>
+			<result name="edit">/search/classConfigPop.jsp</result>
+			<result type="json" name="tab">
+				<param name="root">tablebean</param>
+			</result>
+			<result type="json" name="list">
+				<param name="root">list</param>
+			</result>
+		</action>
+		<action name="doctypeMenu" class="com.nsc.dem.action.searches.DocTypeDetailsAction"
+			method="menu">
+			<result name="left">/search/docTypeDetails.jsp</result>
+		</action>
+
+		<action name="parentType" class="com.nsc.dem.action.searches.DocTypeDetailsAction"
+			method="parentTypeAction">
+			<result type="json">
+				<param name="root">parentList</param>
+			</result>
+		</action>
+		<action name="insertDocCount"
+			class="com.nsc.dem.action.searches.SystemIndexInfoAction" method="insertDocCountAction">
+			<result type="json">
+				<param name="root">countList</param>
+			</result>
+		</action>
+		<action name="insertProjectCount"
+			class="com.nsc.dem.action.searches.SystemIndexInfoAction" method="insertProjectCountAction">
+			<result type="json">
+				<param name="root">projectCountList</param>
+			</result>
+		</action>
+		<action name="selectInsertDocPic"
+			class="com.nsc.dem.action.searches.SystemIndexInfoAction" method="selectInsertDocPicAction">
+			<result type="json">
+				<param name="root">docCountList</param>
+			</result>
+		</action>
+
+		<action name="selectBrowseOperateLog"
+			class="com.nsc.dem.action.searches.SystemIndexInfoAction" method="selectBrowseOperateLogAction">
+			<result type="json">
+				<param name="root">browseList</param>
+			</result>
+		</action>
+		<action name="userInfo"
+			class="com.nsc.dem.action.searches.SystemIndexInfoAction" method="userInfoAction">
+			<result type="json">
+				<param name="root">userInfoList</param>
+			</result>
+		</action>
+		<action name="selectProjectDocCount"
+			class="com.nsc.dem.action.searches.SystemIndexInfoAction" method="selectProjectDocCountAction">
+			<result type="json">
+				<param name="root">newProjectCount</param>
+			</result>
+		</action>
+		<action name="testFtpIp"
+			class="com.nsc.dem.action.searches.PackAgeDownLoadAction" method="testFtpIpAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="sendRedirectDownLoad" class="com.nsc.dem.action.searches.DownloadFileOutSide" method="packAgeDownByOtherArea">
+		</action>
+	</package>
+</struts>    

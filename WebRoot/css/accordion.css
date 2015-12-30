@@ -1,0 +1,132 @@
+@charset "utf-8";
+/* #################### 主控制 ##################### */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,hr,
+fieldset,input,p,blockquote,th,td {margin:0px; padding:0px;}
+body {
+	font-size: 12px;
+	color: #666666;
+	font-family: Arial, Helvetica, sans-serif;
+}
+fieldset,img {border:none;}
+address,caption,cite,code,dfn,th,var {font-style:normal;font-weight:normal;}
+ol,ul {list-style:none;}
+caption,th {text-align:left;}
+img a {border: none;}
+/* #################### 主菜单样式 左侧手风琴菜单 ##################### */
+#accordion h3 {
+	width: 190px;
+	height: 32px;
+	background-image: url(../images/zd_zhu_eds.gif);
+	background-repeat: no-repeat;
+	line-height: 32px;
+	text-indent: 50px;
+	font-size: 14px;
+}
+#accordion h3 a {
+	color: #11437f;
+	text-decoration: none;
+}
+/* #################### 主菜单独图标样式（每一个图标一个北京样式） ##################### */
+.zhubg00 {
+	width: 190px;
+	height: 31px;
+	display: block;
+	background-image: url(../images/Accordion_ico00.gif);
+	background-repeat: no-repeat;
+	background-position: -5px 0px;
+}
+
+.zhubg01 {
+	width: 190px;
+	height: 31px;
+	display: block;
+	background-image: url(../images/magnifier.gif);
+	background-repeat: no-repeat;
+	background-position: -5px 0px;
+}
+
+.zhubg02 {
+	width: 190px;
+	height: 31px;
+	display: block;
+	background-image: url(../images/Accordion_folder.gif);
+	background-repeat: no-repeat;
+	background-position: -5px 0px;
+}
+.zhubg03 {
+	width: 190px;
+	height: 31px;
+	display: block;
+	background-image: url(../images/chart_curve_edit.gif);
+	background-repeat: no-repeat;
+	background-position: -5px 0px;
+}
+.zhubg04 {
+	width: 190px;
+	height: 31px;
+	display: block;
+	background-image: url(../images/chart_bar.gif);
+	background-repeat: no-repeat;
+	background-position: -5px 0px;
+}
+.zhubg05 {
+	width: 190px;
+	height: 31px;
+	display: block;
+	background-image: url(../images/date.gif);
+	background-repeat: no-repeat;
+	background-position: -5px 0px;
+}
+.zhubg06 {
+	width: 190px;
+	height: 31px;
+	display: block;
+	background-image: url(../images/cog.gif);
+	background-repeat: no-repeat;
+	background-position: -5px 0px;
+}
+.zhubg07 {
+	width: 190px;
+	height: 31px;
+	display: block;
+	background-image: url(../images/png-0153.png);
+	background-repeat: no-repeat;
+	background-position: -5px 0px;
+}
+/* #################### 二级菜单样式 ##################### */
+#accordion ul {
+	width: 182px;
+	margin: 0 auto;
+	display: block;
+}
+#accordion li {
+	width: 182px;
+	height: 30px;
+	background-image: url(../images/zd_zi_eds.gif);
+	background-repeat: no-repeat;
+	line-height: 30px;
+	font-family: "宋体";
+	cursor: pointer;
+}
+#accordion li span {
+	margin: 8px 10px 0 18px;
+	float: left;
+	display: inline;
+}
+.acccont {
+	height: 180px;
+}
+.acccont a {
+	color: #666666;
+	text-decoration: none;
+}
+.acccont a:hover {
+	color: #11437f;
+}
+
+/* #################### 手风琴菜单外框样式 ##################### */
+.ui-widget-content {
+	background-color: #ECF1F6;
+}
+
+/* #################### 主菜单样式 左侧手风琴菜单结束 ##################### */

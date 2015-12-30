@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="GBK"?> 
+<!DOCTYPE hibernate-mapping PUBLIC 
+     "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+	<sql-query name="sortSearch">
+		<return alias="t" class="com.nsc.dem.bean.system.TNodeDef" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		 <![CDATA[
+	          select {t.*},
+	                 {u.*}
+	            from T_Node_Def t,
+	                 T_User u 
+	           where t.creator=u.login_id
+	             and t.name like ?
+	     ]]>
+	</sql-query>
+	<sql-query name="treeDefSearch">
+		<return alias="t" class="com.nsc.dem.bean.system.TTreeDef" />
+		<return alias="n" class="com.nsc.dem.bean.system.TNodeDef" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		 <![CDATA[
+	          select {t.*},
+	                 {u.*},
+	                 {n.*} 
+	            from T_Tree_Def t,
+	                 T_Node_Def n,
+	                 T_User u
+	           where t.node_def_id=n.id 
+	             and t.creator=u.login_id 
+	             and t.name like ?
+	     ]]>
+	</sql-query>
+	<sql-query name="treeDefRoleSearch">
+		<return alias="t" class="com.nsc.dem.bean.system.TTreeDef" />
+		<return alias="n" class="com.nsc.dem.bean.system.TNodeDef" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		<return alias="r" class="com.nsc.dem.bean.system.TRoleTree" />
+		 <![CDATA[
+	          select {t.*},
+	                 {u.*},
+	                 {n.*},
+	                 {r.*}
+	            from T_Tree_Def t,
+	                 T_Node_Def n,
+	                 T_User u,
+	                 T_Role_Tree r
+	           where t.node_def_id=n.id 
+                 and t.creator=u.login_id  
+	             and t.id = r.tree_id 
+	             and t.name like ? 
+	             and r.id like ?
+	     ]]>
+	</sql-query>
+
+	<sql-query name="operateLogSearch">
+		<return alias="o" class="com.nsc.dem.bean.system.TOperateLog" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		<return alias="d" class="com.nsc.dem.bean.system.TDictionary" />
+		 <![CDATA[
+	          select {o.*},
+	                 {u.*},
+	                 {d.*}
+	            from T_OPERATE_LOG o,T_User u, t_Dictionary d 
+	          where o.operator=u.login_id 
+	          and o.type=d.code
+	          and o.type between ?  and ?   
+	          and o.operator like ?
+	          and o.operate_time <  to_date(?, 'YYYY-MM-DD')
+	          and o.operate_time >  to_date(?, 'YYYY-MM-DD') 
+	          and o.content like ?
+	     ]]>
+	</sql-query>
+
+	<sql-query name="dictionarySearch">
+		<return alias="t" class="com.nsc.dem.bean.system.TDictionary" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		 <![CDATA[
+	         select {t.*},
+	                {u.*} 
+	           from t_dictionary t,
+	                t_dictionary p,
+	                t_user u 
+	          where t.parent_code=p.code 
+	            and u.login_id=p.creator 
+	            and p.code = ? 
+	            and t.name like ? 
+	     ]]>
+	</sql-query>
+
+	<sql-query name="dictionaryParentSearch">
+		<return alias="t" class="com.nsc.dem.bean.system.TDictionary" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		 <![CDATA[
+	         select {t.*},
+	                {u.*} 
+	           from t_dictionary t,
+	                t_user u
+	          where t.creator=u.login_id
+	            and t.parent_code is null
+	            and t.name like ? 
+	     ]]>
+	</sql-query>
+	<sql-query name="unitInfoSearch">
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		<return alias="n" class="com.nsc.dem.bean.system.TUnit" />
+		<return alias="sc" class="com.nsc.dem.bean.system.TDictionary" />	
+		<return alias="px" class="com.nsc.dem.bean.system.TUnit" />
+		 <![CDATA[
+	             select {u.*},
+                        {n.*},
+                        {sc.*},
+                        {px.*}
+                from T_User u,
+                     t_unit n,
+                     T_unit px,
+                     T_Dictionary sc   
+                where u.login_id = n.creator
+                  and n.type = sc.code
+                  and n.proxy_code=px.code(+)
+                  and nvl(n.code,'null') = nvl(:ncode,n.code)
+     		      and nvl(n.type, 'null') = nvl(:ntype, nvl(n.type, 'null'))
+    			  and nvl(n.is_usable, -1) = nvl(:isusable, nvl(n.is_usable, -1))
+     			  and nvl(n.address,'null') like nvl(:address,nvl(n.address,'null'))
+     			  and nvl(n.telephone,'null') like nvl(:telephone,nvl(n.telephone,'null'))
+	     ]]>
+	</sql-query>
+
+	<sql-query name="userInfoSearch">
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		<return alias="r" class="com.nsc.dem.bean.profile.TRole" />
+		<return alias="t" class="com.nsc.dem.bean.system.TUnit" />		
+		 <![CDATA[
+	            select {u.*},
+	                   {r.*},
+	                   {t.*}
+                  from t_user u,
+                       t_role r,
+                       t_unit t
+               where t.code=u.unit_id
+                 and u.role_id=r.id
+                 and u.name like nvl(:uname,u.name)
+                 and u.login_id like nvl(:loginId,u.login_id)
+                 and nvl(t.code,'null')=nvl(:ucode,nvl(t.code,'null'))
+                 and nvl(r.id,'null')=nvl(:rid,nvl(r.id,'null'))
+                 and nvl(u.is_valid,null)=nvl(:isvalid,nvl(u.is_valid,null))
+
+	     ]]>
+	</sql-query>
+
+	<sql-query name="roleInfoSearch">
+		<return alias="r" class="com.nsc.dem.bean.profile.TRole" />
+		<return alias="d" class="com.nsc.dem.bean.system.TDictionary" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />	
+		 <![CDATA[
+	              select {r.*},
+	                     {d.*},
+	                     {u.*}
+	                from t_role r ,
+	                     t_Dictionary d,
+	                     t_user u
+                   where r.security=d.code
+                     and r.creator=u.login_id
+                     and nvl(r.id,'null')=nvl(:rid,nvl(r.id,'null'))
+ 	                 and nvl(r.description,'null') like nvl(:description,nvl(r.description,'null'))
+
+	     ]]>
+	</sql-query>
+
+	<sql-query name="profileSearch">
+		<return alias="f" class="com.nsc.dem.bean.profile.TProfile" />
+		<return alias="d" class="com.nsc.dem.bean.system.TDictionary" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />	
+		 <![CDATA[
+	             select {f.*},
+	                    {d.*},
+	                    {u.*}
+	              from t_profile f,
+	                   t_dictionary d,
+	                   t_user u
+                  where f.type=d.code
+                    and f.creator=u.login_id
+                    and nvl(d.code, 'null') = nvl(:dcode, nvl(d.code, 'null'))
+                    and nvl(f.remark1, 'null') = nvl(:parentId, nvl(f.remark1, 'null'))
+                    and nvl(f.description,'null') like nvl(:description,nvl(f.description,'null'))
+	     ]]>
+	</sql-query>
+
+
+	<sql-query name="roleProfileSearch">
+		<return alias="rp" class="com.nsc.dem.bean.profile.TRoleProfile" />
+		<return alias="p" class="com.nsc.dem.bean.profile.TProfile" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		<return alias="r" class="com.nsc.dem.bean.profile.TRole" />
+		<return alias="d" class="com.nsc.dem.bean.system.TDictionary" />
+		 <![CDATA[
+	        select {rp.*},
+	               {p.*},
+	               {u.*},
+	               {r.*},
+	               {d.*}
+	          from t_role_profile rp,
+	               t_profile p ,
+	               t_user u,
+	               t_role r,
+	               t_dictionary d
+             where rp.profile_id=p.id
+               and d.code=p.type 
+               and r.id=rp.role_id
+               and u.login_id=rp.grant_user_id
+               and nvl(p.Type, 'null') = nvl(:type, nvl(p.type, 'null'))
+               and nvl(rp.role_id, 'null') = nvl(:roleId, nvl(rp.role_id, 'null'))
+ 
+	     ]]>
+	</sql-query>
+	<sql-query name="userProfileSearch">
+		<return alias="up" class="com.nsc.dem.bean.profile.TUserProfile" />
+		<return alias="p" class="com.nsc.dem.bean.profile.TProfile" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		<return alias="r" class="com.nsc.dem.bean.profile.TRole" />
+		 <![CDATA[
+	          select {up.*},
+	                 {p.*},
+	                 {u.*},
+	                 {r.*}
+	            from t_user_profile up ,
+	                 t_profile p ,
+	                 t_user u,
+	                 t_role r
+               where up.profile_id= p.id
+                 and up.user_id=u.login_id
+                 and u.role_id=r.id
+                 and nvl(u.role_id, 'null') = nvl(:uroleId, nvl(u.role_id, 'null'))
+                 and nvl(p.type, 'null') = nvl(:ptype, nvl(p.type, 'null'))
+                 and nvl(u.name,'null') like nvl(:uname,nvl(u.name,'null'))
+	     ]]>
+	</sql-query>
+	<sql-query name="yishouquanSearch">
+		<return alias="t" class="com.nsc.dem.bean.profile.TProfileTemp" />
+		<return alias="d" class="com.nsc.dem.bean.system.TDictionary" />
+		<return alias="p" class="com.nsc.dem.bean.profile.TProfile" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		<return alias="c" class="com.nsc.dem.bean.profile.TUser" />
+	 <![CDATA[
+	     select {t.*},
+                {d.*},
+                {p.*},
+                {c.*},
+                {u.*}
+         from t_profile_temp t ,
+              t_dictionary d,
+              t_profile p,
+              t_user c,
+              t_User u
+        where d.code=p.type
+          and t.profile_id=p.id
+          and u.login_id=t.user_id
+          and c.login_id=t.grant_user_id 
+          and (t.end_time>(select sysdate from dual) and  (t.permit_count-t.prcs_count!=0))
+          and t.user_id like nvl(:loginId,t.user_id)
+         ]]>
+	</sql-query>
+
+	<sql-query name="yiguoqishouquanSearch">
+		<return alias="t" class="com.nsc.dem.bean.profile.TProfileTemp" />
+		<return alias="d" class="com.nsc.dem.bean.system.TDictionary" />
+		<return alias="p" class="com.nsc.dem.bean.profile.TProfile" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		<return alias="c" class="com.nsc.dem.bean.profile.TUser" />
+	 <![CDATA[
+       select {t.*},
+              {d.*},
+              {p.*},
+              {c.*},
+              {u.*}
+         from t_profile_temp t ,
+              t_dictionary d,
+              t_profile p,
+              t_user c,
+              t_User u
+        where d.code=p.type
+          and t.profile_id=p.id
+          and u.login_id=t.user_id
+          and c.login_id=t.grant_user_id 
+          and (t.end_time<(select sysdate from dual) or  (t.permit_count-t.prcs_count=0))
+          and t.user_id like nvl(:loginId,t.user_id)
+         ]]>
+	</sql-query>
+	<sql-query name="updateYiShouQuan">
+		<return alias="tp" class="com.nsc.dem.bean.profile.TProfileTemp" />
+		<return alias="p" class="com.nsc.dem.bean.profile.TProfile" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+	 <![CDATA[
+	      select {tp.*},
+               {p.*},
+               {u.*}
+         from t_profile_temp tp,
+              t_profile p,
+              t_user u
+         where tp.profile_id=p.id
+           and tp.user_id=u.login_id
+           and tp.id=?
+         ]]>
+	</sql-query>
+
+	<sql-query name="dataProfileInfo">
+		<return alias="t" class="com.nsc.dem.bean.profile.TProfileTemp" />
+		<return alias="r" class="com.nsc.dem.bean.profile.TRole" />
+		<return alias="c" class="com.nsc.dem.bean.profile.TUser" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+	 <![CDATA[
+	     select {t.*},
+	            {r.*},
+	            {c.*},
+	            {u.*}
+         from t_profile_temp t ,
+              t_role r,
+              t_user c,
+              t_user u
+          where t.role=r.id
+            and u.login_id=t.grant_user_id
+            and c.login_id= t.user_id
+            and t.profile_id is null 
+            and (t.end_time>(select sysdate from dual))
+            and t.user_id like nvl(:datalogin,t.user_id)
+         ]]>
+	</sql-query>
+
+	<sql-query name="dataguoqiProfileInfo">
+		<return alias="t" class="com.nsc.dem.bean.profile.TProfileTemp" />
+		<return alias="r" class="com.nsc.dem.bean.profile.TRole" />
+		<return alias="c" class="com.nsc.dem.bean.profile.TUser" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+	 <![CDATA[
+	     select {t.*},
+	            {r.*},
+	            {c.*},
+	            {u.*}
+         from t_profile_temp t ,
+              t_role r,
+              t_user c,
+              t_user u
+          where t.role=r.id
+            and u.login_id=t.grant_user_id
+            and c.login_id= t.user_id
+            and t.profile_id is null 
+            and (t.end_time<(select sysdate from dual))
+            and t.user_id like nvl(:datalogin,t.user_id)
+         ]]>
+	</sql-query>
+
+	<sql-query name="updateDataProfile">
+		<return alias="t" class="com.nsc.dem.bean.profile.TProfileTemp" />
+		<return alias="rp" class="com.nsc.dem.bean.profile.TRole" />
+		<return alias="c" class="com.nsc.dem.bean.profile.TUser" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		<return alias="r" class="com.nsc.dem.bean.profile.TRole" />
+	 <![CDATA[
+	   select   {t.*},
+	            {rp.*},
+	            {c.*},
+	            {u.*},
+	            {r.*}
+         from t_profile_temp t ,
+              t_role rp,
+              t_user c,
+              t_user u,
+              t_role r
+          where t.role=rp.id
+            and u.login_id=t.grant_user_id
+            and c.login_id= t.user_id
+            and u.role_id = r.id
+            and t.id=?
+         ]]>
+	</sql-query>
+	<sql-query name="tempProfile">
+		 <![CDATA[
+	        select t.id,t.name from t_profile t
+              where not exists(
+                    select rp.profile_id from t_role_profile rp
+                      where t.id=rp.profile_id
+                      and rp.role_id=:roleId)
+                and exists(
+                     select * from t_profile t1
+                       where not exists(
+                         select tp.profile_id from t_profile_temp tp
+		  		            where tp.profile_id=t1.id
+                            and tp.role=:roleId)
+                         and t1.type=:type)
+                and exists(
+                     select * from t_profile t2
+                       where not exists(
+                         select up.profile_id from t_user_profile up
+                            where up.profile_id=t2.id)
+                            and t2.type=:type)
+                and t.type=:type
+	     ]]>
+	</sql-query>
+	<sql-query name="backupList">
+		<return alias="t" class="com.nsc.dem.bean.system.TLogFile" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		 <![CDATA[
+	         select {t.*},{u.*}
+	             from t_log_file t,t_user u 
+             where t.backup_operator=u.login_id
+             and t.delete_operator is null 
+             order by t.backup_time desc
+	     ]]>
+	</sql-query>
+
+
+	<sql-query name="backup">
+		<return alias="t" class="com.nsc.dem.bean.system.TOperateLog" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		<return alias="d" class="com.nsc.dem.bean.system.TDictionary" />
+		 <![CDATA[
+	         select {t.*},{u.*},{d.*}
+	             from t_operate_log t,t_user u,t_dictionary d
+             where t.operator=u.login_id
+             	and d.code=t.type 
+             	and to_timestamp(to_char(t.operate_time,'yyyy-mm-dd'),'yyyy-mm-dd')>=nvl(to_timestamp(:timeFrom,'yyyy-mm-dd'),to_timestamp(to_char(t.operate_time,'yyyy-mm-dd'),'yyyy-mm-dd'))        
+                and to_timestamp(to_char(t.operate_time,'yyyy-mm-dd'),'yyyy-mm-dd')<=nvl(to_timestamp(:timeTo,'yyyy-mm-dd'),to_timestamp(to_char(t.operate_time,'yyyy-mm-dd'),'yyyy-mm-dd')) 
+	    		and t.type=nvl(:type,t.type)
+	     ]]>
+	</sql-query>
+
+
+	<sql-query name="logDeleteList">
+		<return alias="t" class="com.nsc.dem.bean.system.TLogFile" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		<return alias="d" class="com.nsc.dem.bean.system.TDictionary" />
+		 <![CDATA[
+	         select {t.*},{u.*},{d.*}
+	             from t_log_file t,t_user u,t_dictionary d
+             where t.backup_operator=u.login_id
+             and t.type=d.code and t.delete_operator is not null 
+             order by t.backup_time desc
+	     ]]>
+	</sql-query>
+
+	<sql-query name="logDelete">
+		<return alias="t" class="com.nsc.dem.bean.system.TLogFile" />
+		 <![CDATA[
+	         select {t.*} 
+	         	from t_log_file t
+             where to_timestamp(to_char(t.backup_time,'yyyy-mm-dd'),'yyyy-mm-dd')>=nvl(to_timestamp(:timeFrom,'yyyy-mm-dd'),to_timestamp(to_char(t.backup_time,'yyyy-mm-dd'),'yyyy-mm-dd'))        
+                and to_timestamp(to_char(t.backup_time,'yyyy-mm-dd'),'yyyy-mm-dd')<=nvl(to_timestamp(:timeTo,'yyyy-mm-dd'),to_timestamp(to_char(t.backup_time,'yyyy-mm-dd'),'yyyy-mm-dd')) 
+          		and t.type in (:in)
+	     ]]>
+	</sql-query>
+	
+	<sql-query name="queryOperateLogByType">
+		<return alias="t" class="com.nsc.dem.bean.system.TOperateLog" />
+		<![CDATA[
+			select {t.*} 
+				from t_operate_log t
+			where t.type=?
+		]]>
+	</sql-query>
+	
+	<sql-query name="queryOperateLogTempList">
+		<return alias="t" class="com.nsc.dem.bean.system.TOperateLogTemp" />
+		<![CDATA[
+			select {t.*} 
+				from t_operate_log_temp t
+			where t.type in (:in)  order by t.operate_Time 
+		]]>
+	</sql-query>
+	
+</hibernate-mapping> 

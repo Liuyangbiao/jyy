@@ -1,0 +1,76 @@
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name=Generator content="younghua.com">
+<script language="JavaScript" src="../js/commonjs.js" type="text/javascript"></script>
+<script language="JavaScript" src="../js/TreeMenu.js" type="text/javascript"></script>
+<script language="JavaScript" src="../js/titleInfo.js" type="text/javascript"></script>
+<link href="../css/treemenu.css" type="text/css" rel="stylesheet" rev="stylesheet" />
+
+<script>
+
+function moveMenu()
+{
+	var evt = getEvent();
+	rootNode.moveMenu(evt.keyCode, true);
+	
+	var curlayer = rootNode.getLayer( rootNode.currentNodeID );
+	
+	if ( 38 == evt.keyCode || 40 == evt.keyCode )
+	{
+		var doctop = document.body.scrollTop;
+		var laytop = curlayer.offsetTop;
+		var ch     = document.body.clientHeight; 
+		
+		if ( (laytop < doctop) &&  (38 == evt.keyCode)  )
+		{
+			return true;
+		}
+		if ( (laytop > (doctop + ch )) &&  (40 == evt.keyCode)  )
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	return true;
+}
+
+</script>	
+</head>
+
+<body  onKeyDown="return moveMenu(); ">
+
+<script>
+rootNode = new TreeMenu("images", "rootNode", "_self", "", true, false);
+for( var i in titleArr )
+{
+	var newNode     = 'newNode' + positArr[i];
+	//var parentNode  = 'newNode' + positArr[ parentArr[i] ];
+
+	if ( -1 != parentArr[i] )
+	{
+		var parentNode  = 'newNode' + positArr[ parentArr[i] ];
+	}
+	else
+	{
+		var parentNode  = 'rootNode';
+	}
+
+	var str = newNode+' = '+parentNode+'.addItem(new TreeNode("'+positArr[i]+'","'+numArr[i]+titleArr[i]+'", null, "../docfile/'+fileArr[i]+'", false, true, "menu_css_01", "helpContent", null));';
+	eval(str);
+}
+rootNode.drawMenu();
+rootNode.writeOutput();
+rootNode.resetBranches();
+
+setContentPage();
+
+
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="GBK"?> 
+<!DOCTYPE hibernate-mapping PUBLIC 
+     "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+	<sql-query name="archieveTdocType">
+		<return alias="t" class="com.nsc.dem.bean.archives.TDocType" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		<return alias="d" class="com.nsc.dem.bean.system.TDictionary" />
+		<return alias="bm" class="com.nsc.dem.bean.system.TDictionary" />
+		<return alias="zy" class="com.nsc.dem.bean.system.TDictionary" />
+		 <![CDATA[
+	        select {t.*},
+                   {u.*},
+                   {d.*} ,
+                   {bm.*},
+                   {zy.*}
+             from T_Doc_Type t,T_User u,t_dictionary d,t_dictionary  bm,t_dictionary zy
+	        where u.login_id=t.creator
+	          and substr(t.code,5,2)=d.code
+	          and t.dft_security=bm.code(+)
+              and t.speciality=zy.code(+)
+       		  and nvl(d.code,'null') = nvl(?,d.code)
+	          and u.name like ?
+	          and t.create_date>=nvl(to_date(?,'yyyy-MM-dd'),t.create_date)
+	          and t.create_date<=nvl(to_date(?,'yyyy-MM-dd'),t.create_date)
+          	  and nvl(t.parent_code,'null')= nvl(?,'null')
+	          and t.name like ?
+	          and nvl(t.com_flag,'null')=nvl(?,nvl(t.com_flag,'null'))
+	          and nvl(t.speciality,'null') = nvl(?,nvl(t.speciality,'null') )
+	          and nvl(t.dft_security,'null') = nvl(?,nvl(t.dft_security,'null'))
+	     ]]>
+	</sql-query>
+	
+	<sql-query name="archieveIndexing">
+		<return alias="d" class="com.nsc.dem.bean.archives.TDoc" />
+		<return alias="p" class="com.nsc.dem.bean.project.TProject" />
+		<return alias="dp" class="com.nsc.dem.bean.project.TDocProject" />
+		 <![CDATA[
+	        select {d.*},
+			       {p.*},
+			       {dp.*}
+             from  T_Doc d,
+			       T_Doc_Project dp,
+			       T_Project p
+	         where d.id=dp.doc_id
+			   and dp.project_id = p.id
+			   and d.meta_flag like ?
+			   and d.status like ?
+			   and p.owner_unit_id like ?
+			   and p.code like ?
+	     ]]>
+	</sql-query>
+	
+	<sql-query name="archieveThumbnails1">
+		<return alias="d" class="com.nsc.dem.bean.archives.TDoc" />
+		<return alias="p" class="com.nsc.dem.bean.project.TProject" />
+		<return alias="dp" class="com.nsc.dem.bean.project.TDocProject" />
+		 <![CDATA[
+	        select {d.*},
+			       {p.*},
+			       {dp.*}
+             from  T_Doc d,
+			       T_Doc_Project dp,
+			       T_Project p
+	         where d.id=dp.doc_id       
+		       and dp.project_id = p.id        
+		       and p.owner_unit_id like ?     
+		       and p.code like  ? 
+		       and d.preview_path is null
+	     ]]>
+	</sql-query>
+	
+	<sql-query name="archieveThumbnails2">
+		<return alias="d" class="com.nsc.dem.bean.archives.TDoc" />
+		<return alias="p" class="com.nsc.dem.bean.project.TProject" />
+		<return alias="dp" class="com.nsc.dem.bean.project.TDocProject" />
+		 <![CDATA[
+	        select {d.*},
+			       {p.*},
+			       {dp.*}
+             from  T_Doc d,
+			       T_Doc_Project dp,
+			       T_Project p
+	         where d.id=dp.doc_id       
+		       and dp.project_id = p.id        
+		       and p.owner_unit_id like ?     
+		       and p.code like  ? 
+		       and d.preview_path is not null
+	     ]]>
+	</sql-query>
+	
+	<sql-query name="docSearch">
+		<return alias="t" class="com.nsc.dem.bean.archives.TDoc" />
+		 <![CDATA[
+	       select {t.*} from t_doc t where t.id in(:in) order by path asc
+		 ]]>
+	</sql-query>
+	
+	<sql-query name="docSearchIsArchives">
+		<return alias="t" class="com.nsc.dem.bean.archives.TDoc" />
+		 <![CDATA[
+	       select {t.*} from t_doc t where t.id in(:in) and t.status <> '03' order by path asc
+		 ]]>
+	</sql-query>
+	
+	<sql-query name="docSearcherByIds">
+		<return alias="t" class="com.nsc.dem.bean.archives.TDoc" />
+		 <![CDATA[
+	       select {t.*} from t_doc t where t.id in(:in);
+		 ]]>
+	</sql-query>
+	
+	
+	<sql-query name="updateArchivesIndex">
+		<return alias="p" class="com.nsc.dem.bean.project.TProject" />
+		 <![CDATA[
+			 select {p.*} 
+               from t_doc_project d,
+                    t_project p
+              where p.id=d.project_id
+                and d.doc_id=?
+	     ]]>
+	</sql-query>
+	
+	<sql-query name="getDocByNoIndexProject">
+		<return alias="d" class="com.nsc.dem.bean.archives.TDoc" />
+		 <![CDATA[
+			 select {d.*}
+			   from t_doc d,
+			        t_doc_project p
+			   where d.id = p.doc_id 
+			     and d.status='01'
+			     and d.meta_flag='0'
+			     and p.project_id in(:in)
+	     ]]>
+	</sql-query>
+	
+</hibernate-mapping> 

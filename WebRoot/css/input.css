@@ -1,0 +1,192 @@
+@charset "gb2312";
+
+input {
+	
+}
+
+select {
+	overflow: visible;
+}
+
+.wenjian {
+	width: 40px;
+}
+
+.checkbox {
+	width: 12px;
+}
+
+.inputtime {
+	width: 80px;
+}
+
+.button {
+	width: 15px;
+	font-size: 6px;
+}
+
+.ziduanzhi {
+	width: 40px;
+}
+
+.biaoge {
+	background-color: #476c89;
+}
+
+.biaoge .bgtr01 {
+	background-color: #48acff;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+.biaoge .bgtr02 {
+	background-color: #FFFFFF;
+}
+
+.biaoge .bgtr03 {
+	background-color: #c6e6fb;
+}
+
+.biaoge a {
+	font-weight: bold;
+	color: #11437F;
+	text-decoration: none;
+}
+
+.geshi {
+	width: 100px;
+}
+
+.fenlei {
+	width: 90px;
+}
+
+.chaxunbutton {
+	background-color: transparent;
+	background-image: url(../images/chaxun_botton.gif);
+	border: none;
+	width: 86px;
+	height: 26px;
+	font-weight: bold;
+	color: #FFFFFF;
+	font-size: 14px;
+	background-repeat: no-repeat;
+}
+
+
+
+.cxtjbutton {
+	background-color: transparent;
+	background-image: url(../images/zrcx_botton.gif);
+	border: none;
+	width: 108px;
+	height: 26px;
+	font-weight: bold;
+	color: #FFFFFF;
+	font-size: 14px;
+	background-repeat: no-repeat;
+}
+
+.qkbutton {
+	background-color: transparent;
+	background-image: url(../images/qk_botton.gif);
+	border: none;
+	width: 59px;
+	height: 21px;
+	color: #FFFFFF;
+	font-size: 12px;
+	background-repeat: no-repeat;
+}
+
+.qkbutton02 {
+	background-color: transparent;
+	background-image: url(../images/qk_button2.gif);
+	border: none;
+	width: 86px;
+	height: 26px;
+	font-weight: bold;
+	color: #FFFFFF;
+	font-size: 12px;
+	background-repeat: no-repeat;
+}
+
+.delbutton {
+	background-color: transparent;
+	background-image: url(../images/del_botton.gif);
+	border: none;
+	width: 44px;
+	height: 19px;
+	color: #FFFFFF;
+	font-size: 12px;
+	background-repeat: no-repeat;
+}
+
+.upbutton {
+	background-color: transparent;
+	background-image: url(../images/upload_button.gif);
+	border: none;
+	width: 86px;
+	height: 21px;
+	color: #375100;
+	font-size: 12px;
+	background-repeat: no-repeat;
+}
+
+.dowbutton {
+	background-color: transparent;
+	background-image: url(../images/download_button.gif);
+	border: none;
+	width: 86px;
+	height: 21px;
+	color: #11437f;
+	font-size: 12px;
+	background-repeat: no-repeat;
+}
+
+.querenbutton {
+	background-color: transparent;
+	background-image: url(../images/queren_botton.gif);
+	border: none;
+	width: 59px;
+	height: 21px;
+	color: #FFFFFF;
+	font-size: 12px;
+	background-repeat: no-repeat;
+}
+
+.denglubutton {
+	background-color: transparent;
+	background-image: url(../images/lodinbutton.gif);
+	border: none;
+	width: 98px;
+	height: 24px;
+	color: #FFFFFF;
+	font-size: 12px;
+	background-repeat: no-repeat;
+}
+
+.quanwen {
+	height: 30px;
+	line-height: 30px;
+	font-size: 16px;
+}
+
+.quanwen2 {
+	border: 0px;
+	width: 370px;
+	font-size: 15px;
+}
+
+.searchInput {
+	background: url("../images/magnifier.gif") no-repeat;
+	width: 401px;
+	height: 32px;
+	padding: 8px 0 0 33px;
+}
+
+.seachDiv {
+	float: left;
+	height: 32px;
+	border: 2px solid #EAEAEA;
+	background-color: #ffffff;
+}

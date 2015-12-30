@@ -1,0 +1,8 @@
+<?xml version = "1.0"?>
+<endpoints version="2.0"
+	xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime">
+	<endpoint name="EDMServiceSOAP"
+		implementation="com.nsc.dem.webservice.server.EDMServiceSOAPImpl"
+		url-pattern="/EDMServiceSOAP">
+	</endpoint>
+</endpoints>

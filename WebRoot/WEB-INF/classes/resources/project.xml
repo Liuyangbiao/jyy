@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="project" extends="json-default" namespace="/project">
+		<interceptors>
+			<interceptor name="exception"
+				class="com.nsc.dem.util.interceptor.ExceptionInterceptor" />
+			<interceptor-stack name="stacks">
+				<interceptor-ref name="exception"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="stacks"></default-interceptor-ref>
+		<global-results>
+			<result name="error">/S500.jsp</result>
+		</global-results>
+		<action name="selectProjectInfo"
+			class="com.nsc.dem.action.project.ProjectInfoManagerAction" method="selectProjectInfoAction">
+			<result type="json">
+				<param name="root">tablebean</param>
+			</result>
+		</action>
+		<action name="projectName"
+			class="com.nsc.dem.action.project.ProjectInfoManagerAction" method="projectNameAction">
+			<result type="json">
+				<param name="root">autoList</param>
+			</result>
+		</action>
+
+		<action name="projectParentName"
+			class="com.nsc.dem.action.project.ProjectInfoManagerAction" method="projectParentNameAction">
+			<result type="json">
+				<param name="root">autoList</param>
+			</result>
+		</action>
+		<action name="deleteProjectInfo"
+			class="com.nsc.dem.action.project.ProjectInfoManagerAction" method="deleteProjectInfoAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="updateProjectInfo"
+			class="com.nsc.dem.action.project.ProjectInfoManagerAction" method="updateProjectInfoAction">
+			<result type="json">
+				<param name="root">returnValue</param>
+			</result>
+		</action>
+		<action name="updateProjectInfoSelect"
+			class="com.nsc.dem.action.project.ProjectInfoManagerAction" method="updateProjectInfoSelectAction">
+			<result type="json">
+				<param name="root">object</param>
+			</result>
+		</action>
+	</package>
+</struts>    

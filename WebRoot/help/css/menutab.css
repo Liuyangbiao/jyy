@@ -1,0 +1,47 @@
+body {   
+   margin: 0px;
+   font-size: 12px;
+	padding: 0px;
+	background-color: #ffffff;
+}
+div,td,dt {
+	font-size: 12px;
+}
+p {
+	line-height: 12px;
+}
+a {
+   font-family:verdana,arial,helvetica,sans-serif; 
+	font-size:12px; 
+	color:#1b3442; 
+	text-decoration:none;
+}
+a:hover {
+   text-decoration:none ; 
+	color:#00b4ff;
+}
+.noselected {
+	background-image: url(../frame/images/tab_noselect.gif);
+	background-repeat: no-repeat;
+	background-position: center;
+   text-align: center;
+	vertical-align: bottom;
+	line-height: 16px;
+	height: 25px;
+	width: 47px;
+}
+.selected {
+	background-image: url(../frame/images/tab_select.gif);
+	background-repeat: no-repeat;
+	background-position: center;
+   text-align: center;
+	vertical-align: bottom;
+	line-height: 21px;
+	font-weight: bold;
+	height: 25px;
+	width: 47px;
+}
+.menutab_bg {
+	background-image: url(../frame/images/tab_bg.gif);
+	background-repeat: repeat-x;
+}

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	  http://www.springframework.org/schema/context
+	     http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+	<bean id="wdAnalyzer" class="com.chenlb.mmseg4j.analysis.ComplexAnalyzer">
+		<constructor-arg>
+			<value>C:\bea\user_projects\domains\jyy\autodeploy\jyy\WEB-INF\classes\seroot\data</value>
+		</constructor-arg>
+	</bean>
+
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass" value="oracle.jdbc.driver.OracleDriver">
+		</property>
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.3.171:1521:EDM">
+		</property>
+		<property name="user" value="edm"></property>
+		<property name="password" value="edm"></property>
+		<property name="maxIdleTime" value="240"></property>
+	</bean>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource"></ref>
+		</property>
+		<property name="eventListeners">
+			<map>
+				<entry key="pre-update">
+					<ref bean="preOperateIntercepter" />
+				</entry>
+				<entry key="post-commit-insert">
+					<ref bean="postOperateIntercepter" />
+				</entry>
+				<entry key="post-commit-update">
+					<ref bean="postOperateIntercepter" />
+				</entry>
+				<entry key="post-commit-delete">
+					<ref bean="postOperateIntercepter" />
+				</entry>
+				<entry key="post-load">
+					<ref bean="postOperateIntercepter" />
+				</entry>
+			</map>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.Oracle9Dialect
+				</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<!-- prop key="hibernate.hbm2ddl.auto">update</prop> -->
+				<prop key="hibernate.jdbc.fetch_size">10</prop>
+				<prop key="hibernate.cache.provider_class">
+					org.hibernate.cache.HashtableCacheProvider
+                </prop>
+				<prop key="hibernate.cache.use_query_cache">true</prop>
+				<prop key="hibernate.cache.use_second_level_cache">true</prop>
+				<prop key="hibernate.default_batch_fetch_size">8</prop>
+				<prop key="hibernate.generate_statistics">true</prop>
+				<prop key="hibernate.order_updates">true</prop>
+				<prop key="hibernate.jdbc.batch_size">20</prop>
+				<prop key="hibernate.connection.release_mode">after_statement</prop>
+				<!-- 解决antlr冲突问题 -->
+				<prop key="hibernate.query.factory_class">org.hibernate.hql.classic.ClassicQueryTranslatorFactory
+				</prop>
+			</props>
+		</property>
+		<property name="mappingResources">
+			<list>
+				<value>com/nsc/dem/service/archives/impl/queries.hbm.xml</value>
+				<value>com/nsc/dem/service/searches/impl/queries.hbm.xml</value>
+				<value>com/nsc/dem/service/system/impl/queries.hbm.xml</value>
+				<value>com/nsc/dem/service/project/impl/queries.hbm.xml</value>
+				<value>com/nsc/dem/bean/project/TProject.hbm.xml</value>
+				<value>
+					com/nsc/dem/bean/project/TShopDrawing.hbm.xml
+				</value>
+				<value>
+					com/nsc/dem/bean/project/TRecordDrawing.hbm.xml
+				</value>
+				<value>
+					com/nsc/dem/bean/archives/TProjectDocCount.hbm.xml
+				</value>
+				<value>
+					com/nsc/dem/bean/project/TComponent.hbm.xml
+				</value>
+				<value>
+					com/nsc/dem/bean/project/TPreDesgin.hbm.xml
+				</value>
+				<value>com/nsc/dem/bean/project/TTender.hbm.xml</value>
+				<value>com/nsc/dem/bean/project/TShopDoc.hbm.xml</value>
+				<value>
+					com/nsc/dem/bean/project/TComponentDoc.hbm.xml
+				</value>
+				<value>com/nsc/dem/bean/profile/TRole.hbm.xml</value>
+				<value>
+					com/nsc/dem/bean/profile/TProfileTemp.hbm.xml
+				</value>
+				<value>
+					com/nsc/dem/bean/profile/TUserProfile.hbm.xml
+				</value>
+				<value>
+					com/nsc/dem/bean/profile/TRoleProfile.hbm.xml
+				</value>
+				<value>com/nsc/dem/bean/profile/TUser.hbm.xml</value>
+				<value>com/nsc/dem/bean/profile/TProfile.hbm.xml</value>
+				<value>com/nsc/dem/bean/system/TReport.hbm.xml</value>
+				<value>
+					com/nsc/dem/bean/system/TDictionary.hbm.xml
+				</value>
+				<value>
+					com/nsc/dem/bean/system/TOperateLog.hbm.xml
+				</value>
+				<value>com/nsc/dem/bean/system/TNodeDef.hbm.xml</value>
+				<value>com/nsc/dem/bean/system/TTemplete.hbm.xml</value>
+				<value>com/nsc/dem/bean/system/TLogFile.hbm.xml</value>
+				<value>com/nsc/dem/bean/system/TRoleTree.hbm.xml</value>
+				<value>com/nsc/dem/bean/system/TOperateLogTemp.hbm.xml</value>
+				<value>com/nsc/dem/bean/system/TServersInfo.hbm.xml</value>
+				<value>
+					com/nsc/dem/bean/archives/TDocType.hbm.xml
+				</value>
+				<value>com/nsc/dem/bean/archives/TDoc.hbm.xml</value>
+				<value>com/nsc/dem/bean/archives/TUserQuery.hbm.xml</value>
+				<value>com/nsc/dem/bean/project/TDocProject.hbm.xml</value>
+				<value>com/nsc/dem/bean/system/TUnit.hbm.xml</value>
+				<value>com/nsc/dem/bean/system/TTreeDef.hbm.xml</value>
+				<value>com/nsc/dem/bean/system/TUserShortcut.hbm.xml</value>
+				<value>com/nsc/dem/bean/archives/TSynProject.hbm.xml</value>
+				<value>com/nsc/dem/bean/archives/TSynDoc.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="transactionInterceptor"
+		class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="insert*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="update*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="remove*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="save*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="del*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean
+		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames">
+			<value>*Service</value>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>transactionInterceptor</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean
+		class="org.springframework.transaction.interceptor.TransactionAttributeSourceAdvisor">
+		<property name="transactionInterceptor" ref="transactionInterceptor" />
+	</bean>
+
+	<bean id="generalDAO" class="com.nsc.base.hibernate.GeneralDAO"
+		autowire="byName">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="userService" class="com.nsc.dem.service.system.impl.UserServiceImpl">
+		<property name="generalDAO">
+			<ref local="generalDAO" />
+		</property>
+	</bean>
+
+	<bean id="profileService" class="com.nsc.dem.service.system.impl.ProfileServiceImpl">
+		<property name="generalDAO">
+			<ref local="generalDAO" />
+		</property>
+	</bean>
+
+	<bean id="searchesService" class="com.nsc.dem.service.searches.impl.SearchesServiceImpl">
+		<property name="generalDAO">
+			<ref local="generalDAO" />
+		</property>
+	</bean>
+
+	<bean id="baseService" class="com.nsc.dem.service.base.BaseService">
+		<property name="generalDAO">
+			<ref local="generalDAO" />
+		</property>
+	</bean>
+
+	<bean id="archivesService" class="com.nsc.dem.service.archives.impl.ArchivesServiceImpl">
+		<property name="generalDAO">
+			<ref local="generalDAO" />
+		</property>
+	</bean>
+
+	<bean id="roleService" class="com.nsc.dem.service.system.impl.RoleServiceImpl">
+		<property name="generalDAO">
+			<ref local="generalDAO" />
+		</property>
+	</bean>
+	<bean id="projectService" class="com.nsc.dem.service.project.impl.ProjectServiceImpl">
+		<property name="generalDAO">
+			<ref local="generalDAO" />
+		</property>
+	</bean>
+	<bean id="dictionaryService" class="com.nsc.dem.service.system.impl.DictionaryServiceImpl">
+		<property name="generalDAO">
+			<ref local="generalDAO" />
+		</property>
+	</bean>
+	<bean id="sortSearchesService" class="com.nsc.dem.service.system.impl.SortSearchesServiceImpl">
+		<property name="generalDAO">
+			<ref local="generalDAO" />
+		</property>
+	</bean>
+	<bean id="logService" class="com.nsc.dem.service.system.impl.LogServiceImpl">
+		<property name="generalDAO">
+			<ref local="generalDAO" />
+		</property>
+	</bean>
+	<bean id="postOperateIntercepter" class="com.nsc.base.hibernate.PostOperateIntercepter">
+	</bean>
+	<bean id="preOperateIntercepter" class="com.nsc.base.hibernate.PreOperateIntercepter">
+	</bean>
+	<bean id="tmpProfileService" class="com.nsc.dem.service.system.impl.ProfileTempServiceImpl">
+		<property name="generalDAO">
+			<ref local="generalDAO" />
+		</property>
+	</bean>
+	
+</beans>

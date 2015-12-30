@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="global" extends="json-default" namespace="/global">
+		<interceptors>
+			<interceptor name="exception"
+				class="com.nsc.dem.util.interceptor.ExceptionInterceptor" />
+			<interceptor-stack name="stacks">
+				<interceptor-ref name="exception"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="stacks"></default-interceptor-ref>
+		<global-results>
+			<result name="error">/S500.jsp</result>
+		</global-results>
+		<action name="*BasicSearchURL" class="com.nsc.dem.action.global.BasicSearchURLAction"
+			method="{1}">
+			<result name="search">/global/basicSearchResultURL.jsp</result>
+			<result type="json">
+				<param name="root">tablebean</param>
+			</result>
+		</action>
+	</package>
+</struts>    

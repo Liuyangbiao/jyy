@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="GBK"?> 
+<!DOCTYPE hibernate-mapping PUBLIC 
+     "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+
+	<sql-query name="proInfoSearch">
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		<return alias="n" class="com.nsc.dem.bean.system.TUnit" />
+		<return alias="p" class="com.nsc.dem.bean.project.TProject" />
+		<return alias="d" class="com.nsc.dem.bean.system.TDictionary" />
+		<return alias="pt" class="com.nsc.dem.bean.system.TDictionary" />
+		<return alias="dy" class="com.nsc.dem.bean.system.TDictionary" />
+		 <![CDATA[
+	         select {u.*},
+	                {n.*},
+	                {p.*},
+	                {d.*},
+	                {pt.*},
+	                {dy.*}
+             from T_User u,
+                  t_unit n,
+                  t_project p,
+                  t_Dictionary d,
+                  t_Dictionary pt,
+                  t_Dictionary dy
+              where u.login_id = p.creator
+               and p.owner_unit_id = n.code
+               and p.status = d.code(+)
+               and p.type=pt.code(+)
+               and p.voltage_level=dy.code(+)
+               and p.owner_unit_id like :ucode||'%' 
+   	           and nvl(p.id,null) = nvl(:pid,p.id)
+               and nvl(p.type, 'null') = nvl(:ptype, p.type)
+               and nvl(p.voltage_level, 'null') = nvl(:pvoltage, p.voltage_level)
+               and nvl(to_char(p.open_year, 'yyyy'), 'null') =nvl(:openyear, nvl(to_char(p.open_year, 'yyyy'), 'null'))
+               and nvl(n.code, 'null') = nvl(:ncode, n.code) 
+               and nvl(p.status, 'null') = nvl(:pstatus, nvl(p.status, 'null'))
+	     ]]>
+	</sql-query>
+	<sql-query name="docCountByProjectId">
+		<return alias="d" class="com.nsc.dem.bean.archives.TDoc" />
+			<return alias="dp" class="com.nsc.dem.bean.project.TDocProject" />
+		<return alias="p" class="com.nsc.dem.bean.project.TProject" />
+		 <![CDATA[
+	        select {d.*},
+	               {dp.*},
+	               {p.*}
+	          from t_doc d,
+                   t_doc_project dp,
+                   t_project p 
+             where d.id=dp.doc_id
+               and dp.project_id=p.id
+               and p.id=:pid
+               and nvl(to_char(d.create_date,'yyyy-mm'),'null')=nvl(:cdate,nvl(to_char(d.create_date,'yyyy-mm'),'null'))
+	     ]]>
+	</sql-query>
+	
+	<sql-query name="findProjectByNoIndex">
+		<return alias="p" class="com.nsc.dem.bean.project.TProject" />
+		<return alias="pp" class="com.nsc.dem.bean.project.TProject" />
+		 <![CDATA[
+	       select {p.*},
+      			  {pp.*}
+		  from t_project p,
+		       t_project pp
+		 where exists(select * from t_doc d ,t_doc_project dp where d.meta_flag=0 and d.status=01 and d.id=dp.doc_id and p.id=dp.project_id)
+		   and p.parent_id=pp.id(+)
+	     ]]>
+	</sql-query>
+	
+	
+</hibernate-mapping> 

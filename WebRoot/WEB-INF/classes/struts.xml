@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.ui.theme" value="xhtml" />
+	<constant name="struts.objectFactory" value="spring" />
+	<constant name="struts.multipart.maxSize" value="999999999" />
+
+	<include file="resources/archives.xml"></include>
+	<include file="resources/project.xml"></include>
+	<include file="resources/search.xml"></include>
+	<include file="resources/system.xml"></include>
+	<include file="resources/global.xml"></include>
+
+</struts>    

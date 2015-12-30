@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="GBK"?> 
+<!DOCTYPE hibernate-mapping PUBLIC 
+     "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+	<sql-query name="source">
+		 <![CDATA[
+	          select code,name from T_Doc_Type
+	     ]]>
+	</sql-query>
+
+	<sql-query name="yezhu_unit">
+		<![CDATA[	
+		  select u.code,
+		         u.name
+		    from t_unit u
+		   where u.type='C01'
+		     and length(u.code)>2
+		     and u.code like :yz_unit||'%'
+		     and exists(select *
+		                  from t_doc_project dp,
+		                       t_project p,
+		                       t_doc d
+		                 where dp.project_id=p.id
+		                   and dp.doc_id=d.id
+		                   and p.owner_unit_id=u.code                   
+		                   and p.id= nvl(nvl(:subproject,:project),p.id)
+		                   and to_char(p.pre_design_year, 'yyyy')=nvl(:ds_year,to_char(p.pre_design_year, 'yyyy'))
+		                   and d.doc_type_code = nvl(nvl(:sub_doc_type,:doc_type),d.doc_type_code)
+		                   and d.doc_type_code like '%'||nvl(:doc_sort,'')||'%'
+		                )
+		]]>
+	</sql-query>
+
+	<sql-query name="design_year">
+		<![CDATA[
+		   select distinct
+		   		  to_char(p.pre_design_year,'yyyy') code,
+	        	  to_char(p.pre_design_year,'yyyy') name
+		     from t_project p
+		    where p.id = nvl(nvl(:subproject,:project),p.id)
+		      and p.owner_unit_id like :yz_unit||'%'
+		      and to_char(p.pre_design_year, 'yyyy')=nvl(:ds_year,to_char(p.pre_design_year, 'yyyy'))
+		      and exists(select *
+		                   from t_doc_project dp,          
+		                        t_doc d
+		                  where dp.project_id=p.id
+		                    and dp.doc_id=d.id
+		                    and d.doc_type_code = nvl(nvl(:sub_doc_type,:doc_type),d.doc_type_code)
+		                    and d.doc_type_code like '%'||nvl(:doc_sort,'')||'%'
+		                )
+		]]>
+	</sql-query>
+
+	<sql-query name="doc_project">
+		<![CDATA[
+   select p.id code,
+          p.name
+     from t_project p
+    where p.parent_id is null
+      and p.owner_unit_id like :yz_unit||'%'
+      and to_char(p.pre_design_year, 'yyyy')=nvl(:ds_year,to_char(p.pre_design_year, 'yyyy'))
+      and exists(select *
+                   from t_doc_project dp,          
+                        t_doc d,
+                        t_project p2
+                  where dp.project_id=p2.id
+                    and dp.doc_id=d.id
+                    and (p2.id=p.id or p2.parent_id=p.id)
+                    and d.doc_type_code = nvl(nvl(:sub_doc_type,:doc_type),d.doc_type_code)
+                    and d.doc_type_code like '%'||nvl(:doc_sort,'')||'%'
+                 )
+		]]>
+	</sql-query>
+
+	<sql-query name="doc_subproject">
+		<![CDATA[		 
+		   select p.id code,
+		          p.name
+		     from t_project p
+		    where p.parent_id =:project
+		      and p.owner_unit_id like :yz_unit||'%'
+		      and to_char(p.pre_design_year, 'yyyy')=nvl(:ds_year,to_char(p.pre_design_year, 'yyyy'))
+		      and exists(select *
+		                   from t_doc_project dp,          
+		                        t_doc d
+		                  where dp.project_id=p.id
+		                    and dp.doc_id=d.id
+		                    and d.doc_type_code = nvl(nvl(:sub_doc_type,:doc_type),d.doc_type_code)
+		                    and d.doc_type_code like '%'||nvl(:doc_sort,'')||'%'
+		                 )
+		]]>
+	</sql-query>
+
+	<sql-query name="doc_type">
+		<![CDATA[
+	  select dt.code,
+             dt.name
+        from t_doc_type dt
+       where dt.parent_code is null
+	     and dt.code = nvl(nvl(:sub_doc_type,:doc_type),dt.code)
+	     and dt.code like '%'||nvl(:doc_sort,'')||'%'
+         and exists(select *
+	                  from t_doc_project dp,
+	                       t_project p,
+	                       t_doc d,
+	                       t_doc_type sdt
+	                 where dp.project_id=p.id
+	                   and dp.doc_id=d.id
+	                   and d.doc_type_code=sdt.code
+	                   and p.owner_unit_id like :yz_unit||'%'
+                       and sdt.parent_code=dt.code
+	                   and p.id= nvl(nvl(:subproject,:project),p.id)
+	                   and to_char(p.pre_design_year, 'yyyy')=nvl(:ds_year,to_char(p.pre_design_year, 'yyyy'))
+	                )
+		]]>
+	</sql-query>
+
+	<sql-query name="sub_doc_type">
+		<![CDATA[ 
+		 select dt.code,
+                dt.name
+        from t_doc_type dt
+       where dt.parent_code is not null
+         and dt.parent_code=nvl(:doc_type,dt.parent_code)
+	     and dt.code like '%'||nvl(:doc_sort,'')||'%'
+         and exists(select *
+	                  from t_doc_project dp,
+	                       t_project p,
+	                       t_doc d
+	                 where dp.project_id=p.id
+	                   and dp.doc_id=d.id
+	                   and p.owner_unit_id like :yz_unit||'%'
+                       and d.doc_type_code=dt.code
+	                   and p.id= nvl(nvl(:subproject,:project),p.id)
+	                   and to_char(p.pre_design_year, 'yyyy')=nvl(:ds_year,to_char(p.pre_design_year, 'yyyy'))
+	                )
+		]]>
+	</sql-query>
+
+	<sql-query name="queryBasic">
+		 <![CDATA[
+	          select * from v_t_pre_desgin
+	     ]]>
+	</sql-query>
+
+	<sql-query name="archieveSearch">
+		<return alias="d" class="com.nsc.dem.bean.archives.TDoc" />
+		<return alias="p" class="com.nsc.dem.bean.project.TProject" />
+		<return alias="t" class="com.nsc.dem.bean.archives.TDocType" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		<return alias="un" class="com.nsc.dem.bean.system.TUnit" />
+		<return alias="dp" class="com.nsc.dem.bean.project.TDocProject" />
+		<return alias="sc" class="com.nsc.dem.bean.system.TDictionary" />
+		<return alias="st" class="com.nsc.dem.bean.system.TDictionary" />	
+		 <![CDATA[
+		 	select {d.*},
+			       {p.*},
+			       {t.*},
+			       {u.*},
+			       {un.*},
+			       {dp.*},
+			       {sc.*},
+			       {st.*}
+			  from T_Doc d,
+			       T_Doc_Project dp,
+			       T_Project p,
+			       T_Doc_Type t,
+			       T_USER u,
+                   T_UNIT un,
+                   T_Dictionary sc,
+                   T_Dictionary st
+			 where d.id=dp.doc_id
+			   and dp.project_id=p.id
+			   and p.owner_unit_id = un.code
+			   and d.doc_type_code=t.code
+			   and d.doc_type_code = nvl(:sub_doc_type,d.doc_type_code)
+			   and t.parent_code = nvl(:doc_type,t.parent_code)
+			   and nvl(d.id,'null')=nvl(:id,nvl(d.id,'null'))
+			   and d.status = st.code
+			   and nvl(d.status,'null')=nvl(:filestatus,nvl(d.status,'null'))
+               and p.id= nvl(nvl(:subproject,:project),p.id)
+               and p.code=nvl(:pcode,p.code)
+			   and nvl(t.parent_code,'null')=nvl(:doc_type,nvl(t.parent_code,'null'))
+			   and un.code like :uncode||'%'
+		       and d.creator=u.login_id 
+		       and d.security = sc.code		       
+		       and nvl(d.security,'null')=nvl(:security,nvl(d.security,'null'))
+		       and d.name like nvl(:dname,d.name)
+		       and u.name like nvl(:uname,u.name)
+		       and un.name like nvl(:unname,un.name)
+		       and to_timestamp(to_char(d.create_date,'yyyy-mm-dd'),'yyyy-mm-dd')>=nvl(to_timestamp(:begin_create_date,'yyyy-mm-dd'),to_timestamp(to_char(d.create_date,'yyyy-mm-dd'),'yyyy-mm-dd'))
+		       and to_timestamp(to_char(d.create_date,'yyyy-mm-dd'),'yyyy-mm-dd')<=nvl(to_timestamp(:end_create_date,'yyyy-mm-dd'),to_timestamp(to_char(d.create_date,'yyyy-mm-dd'),'yyyy-mm-dd'))
+		       and nvl(p.status,'null') =nvl(:status,nvl(p.status,'null'))
+               and nvl(p.type,'null')=nvl(:type,nvl(p.type,'null'))
+		       and nvl(p.voltage_level,'null')=nvl(:voltage_level,nvl(p.voltage_level,'null'))
+		       and p.name like nvl(:pname,p.name)
+               and nvl(to_char(p.pre_design_year,'yyyy'),'null')=nvl(:pre_design_year,nvl(to_char(p.pre_design_year,'yyyy'),'null'))
+               and nvl(to_char(p.open_year,'yyyy'),'null')=nvl(:open_year,nvl(to_char(p.open_year,'yyyy'),'null'))
+		       and nvl(to_char(p.close_year,'yyyy'),'null')=nvl(:close_year,nvl(to_char(p.close_year,'yyyy'),'null'))           
+               and nvl(t.code,'null')=nvl(:child_doc_type,nvl(t.code,'null'))
+               and nvl(d.security,nvl(t.speciality,'null'))=nvl(:speciality,nvl(d.security,nvl(t.speciality,'null')))
+               and nvl(d.version,'null')=nvl(:version,nvl(d.version,'null'))
+	           and nvl(d.file_size,'1')>=nvl(:min_file_size,nvl(d.file_size,'1'))
+               and nvl(d.file_size,'1')<=nvl(:max_file_size,nvl(d.file_size,'1'))     
+               and d.format in (:in)
+		 ]]>
+	</sql-query>
+
+	<sql-query name="projectDetailsSearch">
+		<return alias="d" class="com.nsc.dem.bean.archives.TDoc" />
+		<return alias="t" class="com.nsc.dem.bean.archives.TDocType" />
+		<return alias="p" class="com.nsc.dem.bean.project.TProject" />
+		<return alias="u" class="com.nsc.dem.bean.profile.TUser" />
+		<return alias="ds" class="com.nsc.dem.bean.system.TDictionary" />
+		<return alias="dy" class="com.nsc.dem.bean.system.TDictionary" />
+		<return alias="ps" class="com.nsc.dem.bean.system.TDictionary" />
+		
+			
+		 <![CDATA[
+		 	select {d.*},
+			       {p.*},
+			       {t.*},
+			       {u.*},
+                   {ds.*},
+                   {dy.*},
+                   {ps.*}
+			  from T_Doc d,
+			       T_Doc_Project dp,
+			       T_Project p,
+			       T_Doc_Type t,
+			       T_User u,
+                   t_Dictionary ds,
+                   t_Dictionary dy,
+                   t_Dictionary ps
+			    where d.doc_type_code=t.code(+)          
+        and d.creator=u.login_id(+)                   
+        and d.status=ds.code(+)                
+        and p.voltage_level=dy.code(+)                   
+        and p.status=ps.code(+)         
+        and d.id=dp.doc_id(+)          
+        and nvl(dp.project_id,'')=p.code(+)          
+         and d.id=?
+		]]>
+	</sql-query>
+
+	<sql-query name="queryMonthDocsCount">
+		 <![CDATA[
+	        select to_char(d.create_date, 'yyyy-mm') docMonth ,
+	               count(*) docCount 
+	          from t_doc d,
+	               t_doc_project dp,
+	               t_project p
+			 where d.id=dp.doc_id 
+			   and dp.project_id = p.id 
+			   and d.create_date >to_date(to_char( add_months(sysdate,-5),'yyyy-mm'),'yyyy-mm')
+               and p.owner_unit_id like  :unit||'%'
+              and p.id=nvl(:pid,p.id)
+             group by to_char(d.create_date, 'yyyy-mm')
+             order by to_char(d.create_date, 'yyyy-mm')
+	     ]]>
+	</sql-query>
+	
+	<sql-query name="queryProvinceDocsCount">
+		 <![CDATA[
+	        select count(p.id) dCount , u.code code , u.name uname 
+			from edm.t_project p,edm.t_doc d , edm.t_doc_project dp , edm.t_unit u 
+			where d.id=dp.doc_id 
+			   and dp.project_id = p.id 
+               and p.owner_unit_id like  :unit||'%'
+			   and d.create_date >to_date(to_char( add_months(sysdate,-5),'yyyy-mm'),'yyyy-mm')
+               and u.code = p.owner_unit_id
+               and u.type = 'C01'
+              group by u.code,u.name
+              order by u.code,u.name
+	     ]]>
+	</sql-query>
+	
+	<sql-query name="queryTesionDocsCount">
+		 <![CDATA[
+	        select count(*) docCount ,
+	         		p.voltage_level voltage_level ,
+	        	   td.name dname 
+	          from edm.t_doc d,
+	               edm.t_doc_project dp,
+	              edm.t_project p ,
+                    edm.t_dictionary td 
+			 where d.id=dp.doc_id 
+			   and dp.project_id = p.id 
+               and p.owner_unit_id like :unit||'%'
+               and td.code = p.voltage_level
+			   and d.create_date >to_date(to_char( add_months(sysdate,-5),'yyyy-mm'),'yyyy-mm')
+             group by p.voltage_level,td.name
+             order by p.voltage_level,td.name
+	     ]]>
+	</sql-query>
+	
+	<sql-query name="queryCountryDocsCount">
+		 <![CDATA[
+	          select to_char(d.create_date, 'yyyy-mm') docMonth ,
+	               count(*) docCount ,
+	               p.name project_name
+	          from t_doc d,
+	               t_doc_project dp,
+	              t_project p 
+			 where d.id=dp.doc_id 
+			   and dp.project_id = p.id 
+               and p.owner_unit_id like  :unit||'%'
+			   and d.create_date >to_date(to_char( add_months(sysdate,-5),'yyyy-mm'),'yyyy-mm')
+              and p.id=nvl(:pid,p.id)
+             group by p.id,to_char(d.create_date, 'yyyy-mm')
+             order by to_char(d.create_date, 'yyyy-mm'),p.id
+	     ]]>
+	</sql-query>
+
+	<sql-query name="queryProjectDocsCount">
+		 <![CDATA[
+	        select to_char(d.create_date, 'yyyy-mm') docMonth ,
+	               count(*) docCount,
+	               p2.name  
+              from t_project p,
+                   t_doc_project dp,
+                   t_project p2
+            where p.owner_unit_id like nvl(:unit,p.owner_unit_id)
+              and p.id=dp.project_id
+              and nvl(p.parent_id,p.id)=p2.id
+            group by p2.name,to_char(d.create_date, 'yyyy-mm')
+             order by to_char(d.create_date, 'yyyy-mm'),pCount
+
+	     ]]>
+	</sql-query>
+	
+		<sql-query name="queryProvinceTDocsCount">
+	   <![CDATA[
+	   		select sum(pdc.doc_count) dCount , u.code code , u.name uname
+               from edm.t_Project_doc_count pdc ,
+                    edm.t_unit u 
+             where pdc.owner_unit_id like :unit||'%'
+               and pdc.owner_unit_id = u.code
+               and u.type = 'C01'
+		       and to_date(pdc.year_month,'yyyy-mm')>=to_date(to_char( add_months(sysdate,-5),'yyyy-mm'),'yyyy-mm')
+             group by u.code , u.name
+             order by u.code , u.name
+	   ]]>
+	</sql-query>
+	
+	<sql-query name="queryTesionTDocsCount">
+	   <![CDATA[
+               select sum(pdc.doc_count) doccount ,
+       				  pdc.voltage_level voltage_level,
+	        	   	  d.name dname 
+               from t_Project_doc_count pdc ,
+                    t_dictionary d 
+               where pdc.owner_unit_id like :unit||'%'
+	                 and pdc.voltage_level = d.code
+		        	 and to_date(pdc.year_month,'yyyy-mm')>=to_date(to_char( add_months(sysdate,-5),'yyyy-mm'),'yyyy-mm')
+	                 group by pdc.voltage_level,d.name
+	                 order by pdc.voltage_level,d.name
+	   ]]>
+	</sql-query>
+	
+	<sql-query name="queryTDocsCount">
+	   <![CDATA[
+			   select
+		        pdc.year_month docmonth ,
+		        sum(pdc.doc_count) doccount                
+		    from
+		        t_Project_doc_count pdc           
+		    where
+		        pdc.owner_unit_id like :unit||'%'       
+		        and to_date(pdc.year_month,'yyyy-mm')>=to_date(to_char( add_months(sysdate,-5),'yyyy-mm'),'yyyy-mm')              
+		    group by
+		        pdc.year_month
+	   ]]>
+	</sql-query>
+	
+	<sql-query name="queryProjectDocCount">
+		 <![CDATA[
+	        select p2.name,
+                   count(*) pCount 
+              from t_project p,
+                   t_doc_project dp,
+                   t_project p2
+            where p.owner_unit_id like nvl(:unit,p.owner_unit_id)
+              and p.id=dp.project_id
+              and nvl(p.parent_id,p.id)=p2.id
+            group by p2.name
+            order by pCount desc
+
+	     ]]>
+	</sql-query>
+	
+	<sql-query name="queryAreaTProjectDocCount">
+		 <![CDATA[
+	          select dp.project_name,
+                   count(*) pCount 
+              from t_project p,
+                   t_Project_Doc_Count dp
+            where p.owner_unit_id like nvl(:unit,p.owner_unit_id)
+              and p.id=dp.project_id
+            group by dp.project_name
+            order by pCount desc
+	     ]]>
+	</sql-query>
+	
+	<sql-query name="queryTProjectDocCount">
+		 <![CDATA[
+		 		select dp.project_name,
+                   dp.doc_count pCount 
+              from t_Project_Doc_Count dp
+            where dp.owner_unit_id like :unit||'%'
+            group by dp.project_name,dp.doc_count
+            order by pCount
+	     ]]>
+	</sql-query>
+	
+	<sql-query name="queryArea">
+		<![CDATA[
+	         select t.unit_id unitId 
+	         from t_user t 
+	         where t.unit_id like '0801__'
+	     ]]>
+	</sql-query>
+	
+	<sql-query name="queryDocsCount">
+		 <![CDATA[
+	        select to_char(d.create_date, 'yyyy-mm') docMonth ,
+	               count(*) docCount 
+	          from t_doc d,
+	               t_doc_project dp,
+	               t_project p
+			 where d.id=dp.doc_id 
+			   and dp.project_id = p.id 
+			   and d.create_date >to_date(to_char( add_months(sysdate,-5),'yyyy-mm'),'yyyy-mm')
+               and p.owner_unit_id like  :unit||'%'
+              and p.id=nvl(:pid,p.id)
+             group by to_char(d.create_date, 'yyyy-mm')
+             order by to_char(d.create_date, 'yyyy-mm')
+	     ]]>
+	</sql-query>
+	
+	
+	
+</hibernate-mapping> 
